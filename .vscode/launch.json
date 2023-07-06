@@ -1,0 +1,120 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Debug Eplus Cmd call",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "-e",
+                "8.8.0",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug Eplus Version 1",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "-e",
+                "8.5.0",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug Timestep 1",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "--timestep",
+                "6",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug Timestep 2",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "--timestep",
+                "6",
+                "Test_ChangeoverBypassVAV.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug IdfVersion 1",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "-v",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug IdfVersion 2",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "-v",
+                "Test_ChangeoverBypassVAV.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug with Args",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "Test_ChangeoverBypassVAV.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Debug Help",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--help"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
