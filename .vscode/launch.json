@@ -5,15 +5,59 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Debug Eplus Cmd call",
+            "name": "Test 1: Invalid IDF file",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "-w",
                 "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "Test_Cornelfl MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Test 2: Output IDF file EP version w/o eplus arg",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "--idfversion",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Test 3: Output IDF file EP version w/ eplug arg",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
                 "-e",
-                "8.8.0",
+                "9.5.0",
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "--idfversion",
+                "Test_Cornell MDB 100CD baseline.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Test 4: Invalid IDF file EP version w/ eplug arg",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "-e",
+                "9.5.0",
+                "-w",
+                "../../EnergyPlusV8-8-0/WeatherData/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+                "--idfversion",
                 "Test_Cornell MDB 100CD baseline.idf"
             ],
             "console": "integratedTerminal",

@@ -18,6 +18,6 @@ cmd_list = [command] + args
 
 try:
     # Run the external command
-    subprocess.run(cmd_list, check=True)
+    subprocess.call(cmd_list)
 except subprocess.CalledProcessError as e:
     print(f"Error running {command}: {e}")

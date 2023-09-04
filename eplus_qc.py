@@ -72,11 +72,9 @@ def eppy_change_timestep(iddname1, fname1, timestep_arg):
 
 # TODO: make sure to save out the idf file before running the EnergyPlus cmd
 
-if __name__ == "__main__":
-    main()
 
 def main():
-
+    
     """
     usage: eplus_qc.py [-h] [--idd IDD] [--stdout] [--idfversion] [-e ARG] [-t N] [-w ARG] IDF
 
@@ -101,7 +99,7 @@ def main():
     once_per = parser.add_argument_group("once per session")
     once_per.add_argument('-e', '--eplus', metavar='ARG', required=False, action="store", help='select the EnergyPlus version as a string, e.g., "8.8.0"')
     once_per.add_argument('-w', '--weather', metavar='ARG', required=False, type=str, action="store", help='select the EnergyPlus epw weather file. Select once per session.')
-    parser.add_argument('-v', '--idfversion', action="store_true", help='prints the IDF version')
+    parser.add_argument('-v', '--idfversion', action="store_true", help='prints the IDF version. Cross checks the engine version and exits.')
     parser.add_argument('-t', '--timestep', type=int, metavar='N', action="store", help='select the simulation timesteps per hour. Valid options {6,4,2,1}')
     parser.add_argument('--runperiod', type=int, nargs=2, metavar='begin_month end_month', action="store", help='change the RunPeriod to a [startmonth, endmonth] valid integers {1..12}')
     parser.add_argument('--version', action="version", version="%(prog)s 0.0.1")
@@ -121,18 +119,7 @@ def main():
     if isValidFileType(idf_filepath, ".idf"):
         pass
     else:
-        parser.error('The idf file at "%s" was invalid\n' % (idf_filepath))
-
-    # idfversion argument, idf file already validated
-    # return the version and exit
-    # maybe we should not make it depend on the eppy.IDF class since this needs a idd file
-    if bool(args.idfversion):
-        version = extract_idfversion_from_file(idf_filepath)
-        if version:
-            print('idf version is %s \n' %(version))
-            sys.exit(0)
-        else:
-            parser.error('The IDF EnergyPlus version could not be extracted.')
+        parser.error('The idf file at "%s" was invalid.\n Enter a new IDF.' % (idf_filepath))
 
     # timestep argument
     if args.timestep:
@@ -157,28 +144,38 @@ def main():
         
     # eplus arg: if it's a path to a energyplus.exe, validate it; otherwise, try the shorthand "8.8.0" validate, else 
     if args.eplus:
-        eplus_str = args.eplus
-        eplus_path = absoluteFilePath(eplus_str)
+        eplus_path = absoluteFilePath(args.eplus)
         # if the argument is a rel or abs energyplus.exe
         if isValidFileType(eplus_path, ".exe"):
             print("Custom energyplus.exe located and validated at %s." %(eplus_path))
             # set the EPLUS sys var
             os.environ['EPLUS_EXE'] = eplus_path
         else: # it's a version number string or invalid
-            hyphen_id_str = eplus_str.replace(".", "-")
+            hyphen_id_str = args.eplus.replace(".", "-")
             ep_exe_dir = "\EnergyPlusV" + hyphen_id_str
             eplus_path = os.path.join("C:", ep_exe_dir, "energyplus.exe")
+    else: # no eplus arg was passed but need placeholder for other arg validation 
+        # check if the arg was previously passed
+        if os.environ.get('EPLUS_EXE'):
+            eplus_path = os.environ.get('EPLUS_EXE')
+        else: # no arg passed, none previous, exit code
+            installed_ep_version = subprocess.run(["energyplus", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
+            parser.error('The EnergyPlus engine version could not be extracted. You have installed on your system at least:\n\n    %s\n...Try putting in that value.' %(installed_ep_version.stdout))
+        
             
-            if isValidFileType(eplus_path, ".exe"):
-                print("energyplus.exe located and validated at %s." %(eplus_path))
-                # set the EPLUS sys var
-                os.environ['EPLUS_EXE'] = eplus_path
+    # idf file idfversion bool argument
+    # return the version and exit
+    # maybe we should not make it depend on the eppy.IDF class since this needs a idd file
+    if bool(args.idfversion):
+        version = extract_idfversion_from_file(idf_filepath)
+        if version:
+            if version == args.eplus:
+                print('The idf version is %s. \nThe EnergyPlus engine version is %s.' %(version, args.eplus))
+                sys.exit(0)
             else:
-                print("No valid energyplus.exe can be inferred from the argument.\nPlease check your system for all installations of EnergyPlus.\n")
-                # print help on a function
-                parser.print_help()
-    else: # no arg was passed
-        eplus_path = os.environ.get('EPLUS_EXE')
+                parser.error('The idf version is %s does not match the EnergyPlus engine version %s.' %(version, args.eplus))
+        else:
+            parser.error('The IDF EnergyPlus version could not be extracted.')
 
     # idd argument
     if args.idd:
@@ -228,10 +225,13 @@ def main():
             parser.error("A weather file argument was not provided. Set the weather file at least once per console session with the optional -w.\n")
 
     # run section
+    run()
 
-    print('A simulation run was started for "%s"\n' %(args.idf))
+    def run():
+        print('A simulation run was started for "%s"\n' %(args.idf))
 
-    subprocess.call(["energyplus", "--help"], shell=True)
+        cmd_list = [args.eplus] + [args.weather]
+        subprocess.call(cmd_list)
 
 
 # single run EPLaunch style
@@ -277,4 +277,7 @@ def eplaunch_main():
     idf.run(**theoptions)
 
 
-args.log.close()
+if __name__ == "__main__":
+    main()
+
+    args.log.close()
