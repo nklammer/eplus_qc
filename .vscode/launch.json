@@ -106,6 +106,20 @@
             "justMyCode": true
         },
         {
+            "name": "energyplus cmd: Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/energyplus_tester.py",
+            "args": [
+                "-w",
+                "weather.epw",
+                "-r",
+                "Test_ChangeoverBypassVAV_qc.idf"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: Debug Help",
             "type": "python",
             "request": "launch",
